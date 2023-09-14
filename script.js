@@ -3,6 +3,8 @@ const inputTask = document.querySelector('.main__input');
 const buttonAddTask = document.querySelector('.main__button_type_add');
 const formAddTask = document.querySelector('.main__form');
 const listTasks = document.querySelector('.main__list-tasks');
+const buttonMarkEvenTasks = document.querySelector('.main__button_type_even');
+const buttonMarkOddTasks = document.querySelector('.main__button_type_odd');
 
 if (inputTask.value === '') {
   buttonAddTask.disabled = true;
@@ -128,4 +130,26 @@ const addTask = (e) => {
   });
 }
 
+const markEvenTasks = () => {
+  const tasks = document.querySelectorAll('.main__task');
+  console.log(tasks);
+  tasks.forEach((item, index) => {
+    if (index % 2 !== 0) {
+      item.classList.toggle('main__task_type_even');
+    }
+  });
+}
+
+const markOddTasks = () => {
+  const tasks = document.querySelectorAll('.main__task');
+  console.log(tasks);
+  tasks.forEach((item, index) => {
+    if (index % 2 === 0) {
+      item.classList.toggle('main__task_type_odd');
+    }
+  });
+}
+
 formAddTask.addEventListener('submit', addTask);
+buttonMarkEvenTasks.addEventListener('click', markEvenTasks);
+buttonMarkOddTasks.addEventListener('click', markOddTasks);
