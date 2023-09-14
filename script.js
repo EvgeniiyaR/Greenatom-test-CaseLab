@@ -3,6 +3,7 @@ const inputTask = document.querySelector('.main__input');
 const buttonAddTask = document.querySelector('.main__button_type_add');
 const formAddTask = document.querySelector('.main__form');
 const listTasks = document.querySelector('.main__list-tasks');
+const completeTasks = [];
 
 const getTemplate = () => {
   const clone = templateTask.content.cloneNode(true);
@@ -15,7 +16,24 @@ const getTemplate = () => {
 
 const deleteTask = (e) => {
   const target = e.target.parentNode;
+  const tasks = JSON.parse(localStorage.getItem('listsTasks'));
+  const text = target.querySelector('.main__text').textContent;
   listTasks.removeChild(target);
+  tasks.forEach((item, index) => {
+    if (item === text) {
+      tasks.splice(index, 1);
+    }
+  })
+  localStorage.setItem('listsTasks', JSON.stringify(tasks));
+}
+
+const completeTask = (e) => {
+  const target = e.target.parentNode;
+  const text = target.querySelector('.main__text');
+  completeTasks.push(text.textContent);
+  localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
+  text.classList.add('main__text_type_complete');
+  listTasks.appendChild(target);
 }
 
 
@@ -35,6 +53,7 @@ const addTask = (e) => {
   textTask.textContent = inputTask.value;
   inputTask.value = '';
   buttonDeleteTask.addEventListener('click', deleteTask);
+  buttonCompleteTask.addEventListener('click', completeTask);
   listTasks.prepend(clone);
   const tasks = document.querySelectorAll('.main__task');
   const arrayTasks = [];
