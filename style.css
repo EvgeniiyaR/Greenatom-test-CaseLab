@@ -12,3 +12,15 @@
   gap: 20px;
   justify-content: center;
 }
+
+.main__task_type_even {
+  background-color: aquamarine;
+}
+
+.main__task_type_odd {
+  background-color: palevioletred;
+}
+
+.main__text_type_complete {
+  text-decoration: line-through;
+}
