@@ -13,11 +13,18 @@ const getTemplate = () => {
   return [clone, textTask, buttonCompleteTask, buttonDeleteTask];
 }
 
+const deleteTask = (e) => {
+  const target = e.target.parentNode;
+  listTasks.removeChild(target);
+}
+
+
 if (localStorage.getItem('listsTasks')) {
   const tasks = JSON.parse(localStorage.getItem('listsTasks'));
   tasks.forEach((item) => {
     const [clone, textTask, buttonCompleteTask, buttonDeleteTask] = getTemplate();
     textTask.textContent = item;
+    buttonDeleteTask.addEventListener('click', deleteTask);
     listTasks.appendChild(clone);
   })
 }
@@ -27,8 +34,8 @@ const addTask = (e) => {
   const [clone, textTask, buttonCompleteTask, buttonDeleteTask] = getTemplate();
   textTask.textContent = inputTask.value;
   inputTask.value = '';
-
-  listTasks.appendChild(clone);
+  buttonDeleteTask.addEventListener('click', deleteTask);
+  listTasks.prepend(clone);
   const tasks = document.querySelectorAll('.main__task');
   const arrayTasks = [];
   tasks.forEach((item) => {
