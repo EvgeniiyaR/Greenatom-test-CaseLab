@@ -5,10 +5,16 @@ const formAddTask = document.querySelector('.main__form');
 const listTasks = document.querySelector('.main__list-tasks');
 const buttonMarkEvenTasks = document.querySelector('.main__button_type_even');
 const buttonMarkOddTasks = document.querySelector('.main__button_type_odd');
+const buttonDeleteFirstTask = document.querySelector('.main__button_type_first');
+const buttonDeleteLastTask = document.querySelector('.main__button_type_last');
 
-if (inputTask.value === '') {
-  buttonAddTask.disabled = true;
+const disableAddButton = () => {
+  if (inputTask.value === '') {
+    buttonAddTask.disabled = true;
+  }
 }
+
+disableAddButton();
 
 inputTask.addEventListener('input', (e) => {
   if (e.target.value === '') {
@@ -92,11 +98,14 @@ if (localStorage.getItem('listTasks')) {
     textTask.textContent = item[0];
     task.dataset.id = item[1];
     listTasks.appendChild(clone);
-    completeTasks.forEach((completeTask) => {
-      if (completeTask === item[1]) {
-        textTask.classList.add('main__text_type_complete');
-      }
-    })
+    if (completeTasks) {
+      completeTasks.forEach((completeTask) => {
+        if (completeTask === item[1]) {
+          textTask.classList.add('main__text_type_complete');
+          buttonCompleteTask.textContent = 'Не готово';
+        }
+      })
+    }
     buttonDeleteTask.addEventListener('click', deleteTask);
     buttonCompleteTask.addEventListener('click', (e) => {
       if (textTask.classList.contains('main__text_type_complete')) {
@@ -120,6 +129,7 @@ const addTask = (e) => {
   arrayTasks.unshift([textTask.textContent, count]);
   listTasks.prepend(clone);
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
+  disableAddButton();
   buttonDeleteTask.addEventListener('click', deleteTask);
   buttonCompleteTask.addEventListener('click', (e) => {
     if (textTask.classList.contains('main__text_type_complete')) {
@@ -132,7 +142,6 @@ const addTask = (e) => {
 
 const markEvenTasks = () => {
   const tasks = document.querySelectorAll('.main__task');
-  console.log(tasks);
   tasks.forEach((item, index) => {
     if (index % 2 !== 0) {
       item.classList.toggle('main__task_type_even');
@@ -142,7 +151,6 @@ const markEvenTasks = () => {
 
 const markOddTasks = () => {
   const tasks = document.querySelectorAll('.main__task');
-  console.log(tasks);
   tasks.forEach((item, index) => {
     if (index % 2 === 0) {
       item.classList.toggle('main__task_type_odd');
@@ -150,6 +158,36 @@ const markOddTasks = () => {
   });
 }
 
+const deleteTaskCommon = (isFirst) => {
+  const tasks = document.querySelectorAll('.main__task');
+  const completeTasks = JSON.parse(localStorage.getItem('completeTasks'));
+  const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
+  if (tasks.length > 0) {
+    let deleteElement;
+    isFirst ? deleteElement = arrayTasks.shift() : deleteElement = arrayTasks.pop();
+    if (completeTasks) {
+      completeTasks.forEach((item, index) => {
+        if (item === deleteElement[1]) {
+          completeTasks.splice(index, 1);
+        }
+      })
+      localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
+  }
+    }
+    isFirst ? listTasks.removeChild(tasks[0]) : listTasks.removeChild(tasks[tasks.length - 1]);
+    localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
+}
+
+const deleteFirstTask = () => {
+  deleteTaskCommon(true);
+}
+
+const deleteLastTask = () => {
+  deleteTaskCommon(false);
+}
+
 formAddTask.addEventListener('submit', addTask);
 buttonMarkEvenTasks.addEventListener('click', markEvenTasks);
 buttonMarkOddTasks.addEventListener('click', markOddTasks);
+buttonDeleteFirstTask.addEventListener('click', deleteFirstTask);
+buttonDeleteLastTask.addEventListener('click', deleteLastTask);
