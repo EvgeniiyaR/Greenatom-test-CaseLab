@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>ToDoList</title>
+</head>
+<body class="body">
+  <h1>ToDoList</h1>
+  <div class="main">
+    <ul>
+      <li><button type="button">Выделить четные элементы</button></li>
+      <li><button type="button">Выделить нечетные элементы</button></li>
+      <li><button type="button">Удалить первый элемент</button></li>
+      <li><button type="button">Удалить последний элемент</button></li>
+    </ul>
+    <div>
+      <form class="main__form" name="add-task">
+        <input class="main__input" type="text" name="task">
+        <button class="main__button main__button_type_add" type="submit">Добавить задачу</button>
+      </form>
+      <ul class="main__list-tasks">
+        <template id="template-task">
+          <li class="main__task">
+            <p class="main__text">Задача</p>
+            <button class="main__button main__button_type_complete" type="button">Готово</button>
+            <button class="main__button main__button_type_delete" type="button">Удалить</button>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>
