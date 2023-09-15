@@ -24,15 +24,19 @@ const getTemplate = () => {
   const clone = templateTask.content.cloneNode(true);
   const textTask = clone.querySelector('.main__text');
   const buttonCompleteTask = clone.querySelector('.main__button_type_complete');
+  const buttonUncompleteTask = clone.querySelector('.main__button_type_uncomplete');
   const buttonDeleteTask = clone.querySelector('.main__button_type_delete');
   const buttonEditTask = clone.querySelector('.main__button_type_edit');
+  const buttonSaveTask = clone.querySelector('.main__button_type_save');
+  const buttonCancelTask = clone.querySelector('.main__button_type_cancel');
+  const extraButtons = clone.querySelector('.main__extra-btns-edit');
   const task = clone.querySelector('.main__task');
 
-  return [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task];
+  return [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, buttonSaveTask, buttonCancelTask, task, extraButtons];
 }
 
 const deleteTask = (e) => {
-  const target = e.target.parentNode;
+  const target = e.target.parentNode.parentNode;
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks'));
 
@@ -54,8 +58,7 @@ const deleteTask = (e) => {
 }
 
 const completeTask = (e) => {
-  const target = e.target.parentNode;
-  e.target.textContent = 'Не готово';
+  const target = e.target.parentNode.parentNode;
   const text = target.querySelector('.main__text');
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks')) || [];
@@ -66,7 +69,7 @@ const completeTask = (e) => {
       arrayTasks.splice(index, 1);
     }
   })
-  arrayTasks.push([text.textContent, Number(target.dataset.id)]);
+  arrayTasks.push([text.value, Number(target.dataset.id)]);
   text.classList.add('main__text_type_complete');
   listTasks.appendChild(target);
   completeTasks.push(Number(target.dataset.id));
@@ -75,8 +78,7 @@ const completeTask = (e) => {
 }
 
 const uncompleteTask = (e) => {
-  const target = e.target.parentNode;
-  e.target.textContent = 'Готово';
+  const target = e.target.parentNode.parentNode;
   const text = target.querySelector('.main__text');
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks')) || [];
   const buttonEdit = target.querySelector('.main__button_type_edit');
@@ -90,7 +92,9 @@ const uncompleteTask = (e) => {
   localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
 }
 
-const saveOrCancelTask = (target, isSave, buttonComplete, buttonEdit, extraButtons, text, arrayTasks) => {
+const saveOrCancelTask = (e, isSave, buttonComplete, buttonEdit, extraButtons, text) => {
+  const target = e.target.parentNode.parentNode.parentNode;
+  const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   text.disabled = true;
   buttonComplete.classList.remove('main__button_inactive');
   buttonEdit.classList.remove('main__button_inactive');
@@ -103,37 +107,29 @@ const saveOrCancelTask = (target, isSave, buttonComplete, buttonEdit, extraButto
   isSave && localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
 }
 
-const editTask = (e) => {
-  const target = e.target.parentNode;
+const editTask = (e, buttonCompleteTask, buttonEditTask, buttonSaveTask, extraButtons, textTask) => {
+  const target = e.target.parentNode.parentNode;
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
-  const buttonCancel = target.querySelector('.main__button_type_cancel');
-  const buttonSave = target.querySelector('.main__button_type_save');
-  const buttonComplete = target.querySelector('.main__button_type_complete');
-  const buttonEdit = target.querySelector('.main__button_type_edit');
-  buttonComplete.classList.add('main__button_inactive');
-  buttonEdit.classList.add('main__button_inactive');
-  const extraButtons = target.querySelector('.main__extra-btns-edit');
+  buttonCompleteTask.classList.add('main__button_inactive');
+  buttonEditTask.classList.add('main__button_inactive');
   extraButtons.classList.add('main__extra-btns-edit_active');
-  const text = target.querySelector('.main__text');
-  text.disabled = false;
+  textTask.disabled = false;
 
   const disableSaveButton = (value) => {
-    if (value === text.value || text.value === '') {
-      buttonSave.disabled = true;
+    if (value === textTask.value || textTask.value === '') {
+      buttonSaveTask.disabled = true;
     } else {
-      buttonSave.disabled = false;
+      buttonSaveTask.disabled = false;
     }
   }
 
-  if (text.disabled === false) {
-    buttonCancel.addEventListener('click', () => saveOrCancelTask(target, false, buttonComplete, buttonEdit, extraButtons, text, arrayTasks));
+  if (textTask.disabled === false) {
     arrayTasks.forEach((item) => {
       if (item[1] === Number(target.dataset.id)) {
         disableSaveButton(item[0]);
-        text.addEventListener('input', () => disableSaveButton(item[0]));
+        textTask.addEventListener('input', () => disableSaveButton(item[0]));
       }
     })
-    buttonSave.addEventListener('click', () => saveOrCancelTask(target, true, buttonComplete, buttonEdit, extraButtons, text, arrayTasks));
   }
 }
 
@@ -141,7 +137,7 @@ if (localStorage.getItem('listTasks')) {
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks'));
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   arrayTasks.forEach((item) => {
-    const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task] = getTemplate();
+    const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, buttonSaveTask, buttonCancelTask, task, extraButtons] = getTemplate();
     textTask.disabled = true;
     textTask.value = item[0];
     task.dataset.id = item[1];
@@ -150,7 +146,6 @@ if (localStorage.getItem('listTasks')) {
       completeTasks.forEach((completeTask) => {
         if (completeTask === item[1]) {
           textTask.classList.add('main__text_type_complete');
-          buttonCompleteTask.textContent = 'Не готово';
           buttonEditTask.disabled = true;
         }
       })
@@ -163,7 +158,9 @@ if (localStorage.getItem('listTasks')) {
         completeTask(e);
       }
     });
-    buttonEditTask.addEventListener('click', editTask);
+    buttonEditTask.addEventListener('click', (e) => editTask(e, buttonCompleteTask, buttonEditTask, buttonSaveTask, extraButtons, textTask));
+    buttonSaveTask.addEventListener('click', (e) => saveOrCancelTask(e, true, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
+    buttonCancelTask.addEventListener('click', (e) => saveOrCancelTask(e, false, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
   })
 }
 
@@ -171,7 +168,7 @@ const addTask = (e) => {
   e.preventDefault();
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks')) || [];
   let count = arrayTasks.length;
-  const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task] = getTemplate();
+  const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, buttonSaveTask, buttonCancelTask, task, extraButtons] = getTemplate();
   textTask.disabled = true;
   textTask.value = inputTask.value;
   inputTask.value = '';
@@ -189,7 +186,9 @@ const addTask = (e) => {
       completeTask(e);
     }
   });
-  buttonEditTask.addEventListener('click', editTask);
+  buttonEditTask.addEventListener('click', (e) => editTask(e, buttonCompleteTask, buttonEditTask, buttonSaveTask, extraButtons, textTask));
+  buttonSaveTask.addEventListener('click', (e) => saveOrCancelTask(e, true, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
+  buttonCancelTask.addEventListener('click', (e) => saveOrCancelTask(e, false, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
 }
 
 const markEvenTasks = () => {
