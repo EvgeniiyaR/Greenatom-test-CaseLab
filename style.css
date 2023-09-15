@@ -118,8 +118,8 @@
 .main__button_type_save,
 .main__button_type_cancel,
 .main__button_type_uncomplete {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -131,38 +131,38 @@
 .main__button_type_add {
   border: 1px solid green;
   color: green;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .main__button_type_complete {
   border: 1px solid green;
   color: green;
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .main__button_type_edit {
   border: 1px solid purple;
   color: purple;
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .main__button_type_delete {
   border: 1px solid red;
   color: red;
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .main__button_type_save {
   border: 1px solid blue;
   color: blue;
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .main__button_type_cancel,
 .main__button_type_uncomplete {
   border: 1px solid orange;
   color: orange;
-  font-size: 10px;
+  font-size: 13px;
   align-items: flex-start;
 }
 
