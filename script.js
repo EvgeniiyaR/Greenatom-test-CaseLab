@@ -11,27 +11,24 @@ const buttonDeleteLastTask = document.querySelector('.main__button_type_last');
 const disableAddButton = () => {
   if (inputTask.value === '') {
     buttonAddTask.disabled = true;
+  } else {
+    buttonAddTask.disabled = false;
   }
 }
 
 disableAddButton();
 
-inputTask.addEventListener('input', (e) => {
-  if (e.target.value === '') {
-    buttonAddTask.disabled = true;
-  } else {
-    buttonAddTask.disabled = false;
-  }
-})
+inputTask.addEventListener('input', disableAddButton);
 
 const getTemplate = () => {
   const clone = templateTask.content.cloneNode(true);
   const textTask = clone.querySelector('.main__text');
   const buttonCompleteTask = clone.querySelector('.main__button_type_complete');
   const buttonDeleteTask = clone.querySelector('.main__button_type_delete');
+  const buttonEditTask = clone.querySelector('.main__button_type_edit');
   const task = clone.querySelector('.main__task');
 
-  return [clone, textTask, buttonCompleteTask, buttonDeleteTask, task];
+  return [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task];
 }
 
 const deleteTask = (e) => {
@@ -62,6 +59,8 @@ const completeTask = (e) => {
   const text = target.querySelector('.main__text');
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks')) || [];
+  const buttonEdit = target.querySelector('.main__button_type_edit');
+  buttonEdit.disabled = true;
   arrayTasks.forEach((item, index) => {
     if (item[1] === Number(target.dataset.id)) {
       arrayTasks.splice(index, 1);
@@ -80,6 +79,8 @@ const uncompleteTask = (e) => {
   e.target.textContent = 'Готово';
   const text = target.querySelector('.main__text');
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks')) || [];
+  const buttonEdit = target.querySelector('.main__button_type_edit');
+  buttonEdit.disabled = false;
   completeTasks.forEach((item, index) => {
     if (item === Number(target.dataset.id)) {
       completeTasks.splice(index, 1);
@@ -89,13 +90,60 @@ const uncompleteTask = (e) => {
   localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
 }
 
+const saveOrCancelTask = (target, isSave, buttonComplete, buttonEdit, extraButtons, text, arrayTasks) => {
+  text.disabled = true;
+  buttonComplete.classList.remove('main__button_inactive');
+  buttonEdit.classList.remove('main__button_inactive');
+  extraButtons.classList.remove('main__extra-btns-edit_active');
+  arrayTasks.forEach((item) => {
+    if (item[1] === Number(target.dataset.id)) {
+      isSave ? item[0] = text.value : text.value = item[0];
+    }
+  })
+  isSave && localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
+}
+
+const editTask = (e) => {
+  const target = e.target.parentNode;
+  const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
+  const buttonCancel = target.querySelector('.main__button_type_cancel');
+  const buttonSave = target.querySelector('.main__button_type_save');
+  const buttonComplete = target.querySelector('.main__button_type_complete');
+  const buttonEdit = target.querySelector('.main__button_type_edit');
+  buttonComplete.classList.add('main__button_inactive');
+  buttonEdit.classList.add('main__button_inactive');
+  const extraButtons = target.querySelector('.main__extra-btns-edit');
+  extraButtons.classList.add('main__extra-btns-edit_active');
+  const text = target.querySelector('.main__text');
+  text.disabled = false;
+
+  const disableSaveButton = (value) => {
+    if (value === text.value || text.value === '') {
+      buttonSave.disabled = true;
+    } else {
+      buttonSave.disabled = false;
+    }
+  }
+
+  if (text.disabled === false) {
+    buttonCancel.addEventListener('click', () => saveOrCancelTask(target, false, buttonComplete, buttonEdit, extraButtons, text, arrayTasks));
+    arrayTasks.forEach((item) => {
+      if (item[1] === Number(target.dataset.id)) {
+        disableSaveButton(item[0]);
+        text.addEventListener('input', () => disableSaveButton(item[0]));
+      }
+    })
+    buttonSave.addEventListener('click', () => saveOrCancelTask(target, true, buttonComplete, buttonEdit, extraButtons, text, arrayTasks));
+  }
+}
 
 if (localStorage.getItem('listTasks')) {
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks'));
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   arrayTasks.forEach((item) => {
-    const [clone, textTask, buttonCompleteTask, buttonDeleteTask, task] = getTemplate();
-    textTask.textContent = item[0];
+    const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task] = getTemplate();
+    textTask.disabled = true;
+    textTask.value = item[0];
     task.dataset.id = item[1];
     listTasks.appendChild(clone);
     if (completeTasks) {
@@ -103,6 +151,7 @@ if (localStorage.getItem('listTasks')) {
         if (completeTask === item[1]) {
           textTask.classList.add('main__text_type_complete');
           buttonCompleteTask.textContent = 'Не готово';
+          buttonEditTask.disabled = true;
         }
       })
     }
@@ -114,6 +163,7 @@ if (localStorage.getItem('listTasks')) {
         completeTask(e);
       }
     });
+    buttonEditTask.addEventListener('click', editTask);
   })
 }
 
@@ -121,12 +171,13 @@ const addTask = (e) => {
   e.preventDefault();
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks')) || [];
   let count = arrayTasks.length;
-  const [clone, textTask, buttonCompleteTask, buttonDeleteTask, task] = getTemplate();
-  textTask.textContent = inputTask.value;
+  const [clone, textTask, buttonCompleteTask, buttonDeleteTask, buttonEditTask, task] = getTemplate();
+  textTask.disabled = true;
+  textTask.value = inputTask.value;
   inputTask.value = '';
   count += 1;
   task.dataset.id = count;
-  arrayTasks.unshift([textTask.textContent, count]);
+  arrayTasks.unshift([textTask.value, count]);
   listTasks.prepend(clone);
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
   disableAddButton();
@@ -138,6 +189,7 @@ const addTask = (e) => {
       completeTask(e);
     }
   });
+  buttonEditTask.addEventListener('click', editTask);
 }
 
 const markEvenTasks = () => {
