@@ -7,6 +7,8 @@ const buttonMarkEvenTasks = document.querySelector('.main__button_type_even');
 const buttonMarkOddTasks = document.querySelector('.main__button_type_odd');
 const buttonDeleteFirstTask = document.querySelector('.main__button_type_first');
 const buttonDeleteLastTask = document.querySelector('.main__button_type_last');
+let isMarkEven = false;
+let isMarkOdd = false;
 
 const disableAddButton = () => {
   if (inputTask.value === '') {
@@ -181,6 +183,16 @@ const addTask = (e) => {
   listTasks.prepend(clone);
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
   disableAddButton();
+  if (isMarkOdd) {
+    if (count % 2 !== 0) {
+      task.classList.add('main__task_type_odd');
+    }
+  }
+  if (isMarkEven) {
+    if (count % 2 === 0) {
+      task.classList.add('main__task_type_even');
+    }
+  }
   buttonDeleteTask.addEventListener('click', deleteTask);
   buttonCompleteTask.addEventListener('click', completeTask);
   buttonUncompleteTask.addEventListener('click', uncompleteTask);
@@ -194,9 +206,11 @@ const markEvenTasks = () => {
   tasks.forEach((item, index) => {
     if (item.classList.contains('main__task_type_even')) {
       item.classList.remove('main__task_type_even');
+      isMarkEven = false;
     } else {
       if (index % 2 !== 0) {
         item.classList.add('main__task_type_even');
+        isMarkEven = true;
       }
     }
   });
@@ -207,9 +221,11 @@ const markOddTasks = () => {
   tasks.forEach((item, index) => {
     if (item.classList.contains('main__task_type_odd')) {
       item.classList.remove('main__task_type_odd');
+      isMarkOdd = false;
     } else {
       if (index % 2 === 0) {
         item.classList.add('main__task_type_odd');
+        isMarkOdd = true;
       }
     }
   });
