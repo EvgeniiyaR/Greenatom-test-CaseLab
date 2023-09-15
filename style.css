@@ -29,10 +29,17 @@
   font-family: 'Caveat', cursive, Arial, Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   margin: 0 auto;
   max-width: 1200px;
   text-align: center;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.heading {
+  margin: 0;
 }
 
 .main {
@@ -87,6 +94,7 @@
 .main__button_type_first,
 .main__button_type_last {
   font-family: 'Caveat', cursive, Arial, Helvetica, sans-serif;
+  font-size: 20px;
 }
 
 .main__input {
@@ -165,6 +173,7 @@
   justify-content: space-between;
   padding: 5px;
   border-bottom: 1px solid black;
+  align-items: center;
 }
 
 .main__task:first-of-type {
@@ -286,7 +295,7 @@
   flex-direction: column;
   overflow: auto;
   width: 275px;
-  height: 310px;
+  height: 305px;
 }
 
 .main__list-tasks::-webkit-scrollbar {
@@ -315,6 +324,14 @@
   display: flex;
 }
 
+.main__link {
+  font-size: 20px;
+  margin: 0;
+  text-decoration: none;
+  color: black;
+  transition: color .3s linear;
+}
+
 @media (hover:hover) {
   .main__button:hover {
     cursor: pointer;
@@ -332,6 +349,10 @@
   .main__button:disabled:hover {
     cursor: default;
     transform: scale(1);
+  }
+
+  .main__link:hover {
+    color: blueviolet;
   }
 }
 
