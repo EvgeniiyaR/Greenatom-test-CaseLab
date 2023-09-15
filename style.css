@@ -24,3 +24,12 @@
 .main__text_type_complete {
   text-decoration: line-through;
 }
+
+.main__button_inactive,
+.main__extra-btns-edit_inactive {
+  display: none;
+}
+
+.main__extra-btns-edit_active {
+  display: flex;
+}

@@ -23,8 +23,13 @@
       <ul class="main__list-tasks">
         <template id="template-task">
           <li class="main__task">
-            <p class="main__text">Задача</p>
+            <input type="text" class="main__text"></input>
             <button class="main__button main__button_type_complete" type="button">Готово</button>
+            <button class="main__button main__button_type_edit" type="button">Редактировать</button>
+            <div class="main__extra-btns-edit main__extra-btns-edit_inactive">
+              <button class="main__button main__button_type_save" type="button">Cохранить</button>
+              <button class="main__button main__button_type_cancel" type="button">Отмена</button>
+            </div>
             <button class="main__button main__button_type_delete" type="button">Удалить</button>
           </li>
         </template>
