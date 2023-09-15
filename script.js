@@ -192,8 +192,12 @@ const addTask = (e) => {
 const markEvenTasks = () => {
   const tasks = document.querySelectorAll('.main__task');
   tasks.forEach((item, index) => {
-    if (index % 2 !== 0) {
-      item.classList.toggle('main__task_type_even');
+    if (item.classList.contains('main__task_type_even')) {
+      item.classList.remove('main__task_type_even');
+    } else {
+      if (index % 2 !== 0) {
+        item.classList.add('main__task_type_even');
+      }
     }
   });
 }
@@ -201,8 +205,12 @@ const markEvenTasks = () => {
 const markOddTasks = () => {
   const tasks = document.querySelectorAll('.main__task');
   tasks.forEach((item, index) => {
-    if (index % 2 === 0) {
-      item.classList.toggle('main__task_type_odd');
+    if (item.classList.contains('main__task_type_odd')) {
+      item.classList.remove('main__task_type_odd');
+    } else {
+      if (index % 2 === 0) {
+        item.classList.add('main__task_type_odd');
+      }
     }
   });
 }
