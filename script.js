@@ -7,8 +7,41 @@ const buttonMarkEvenTasks = document.querySelector('.main__button_type_even');
 const buttonMarkOddTasks = document.querySelector('.main__button_type_odd');
 const buttonDeleteFirstTask = document.querySelector('.main__button_type_first');
 const buttonDeleteLastTask = document.querySelector('.main__button_type_last');
-let isMarkEven = false;
-let isMarkOdd = false;
+let isMarkEven = JSON.parse(localStorage.getItem('isMarkEven')) || false;
+let isMarkOdd = JSON.parse(localStorage.getItem('isMarkOdd')) || false;
+
+function generateRandomColor() {
+  const сolors = [
+    "#FF0000",
+    "#FFA500",
+    "#FFFF00",
+    "#FF1493",
+    "#00FFFF",
+    "#FF69B4",
+    "#FFD700",
+    "#9400D3",
+    "#FF6347",
+    "#8A2BE2",
+    "#1E90FF",
+    "#FF4500",
+    "#7FFF00",
+    "#FF00FF",
+    "#6A5ACD",
+    "#FFA07A",
+  ];
+
+  const randomIndexEven = Math.floor(Math.random() * сolors.length);
+  const randomColorEven = сolors[randomIndexEven];
+
+  сolors.splice(randomIndexEven, 1);
+
+  const randomIndexOdd = Math.floor(Math.random() * (сolors.length - 1));
+  const randomColorOdd = сolors[randomIndexOdd];
+
+  return [randomColorEven, randomColorOdd];
+}
+
+const [randomColorEven, randomColorOdd] = generateRandomColor();
 
 const disableAddButton = () => {
   if (inputTask.value === '') {
@@ -37,11 +70,27 @@ const getTemplate = () => {
   return [clone, textTask, buttonCompleteTask, buttonUncompleteTask, buttonDeleteTask, buttonEditTask, buttonSaveTask, buttonCancelTask, task, extraButtons];
 }
 
+const markTask = () => {
+  const tasks = document.querySelectorAll('.main__task');
+  tasks.forEach((item, index) => {
+    item.classList.remove('main__task_type_odd');
+    item.classList.remove('main__task_type_even');
+    item.style.backgroundColor = 'transparent';
+    if (isMarkOdd && (index + 1) % 2 !== 0) {
+      item.classList.add('main__task_type_odd');
+      item.style.backgroundColor = randomColorOdd;
+    }
+    if (isMarkEven && (index + 1) % 2 === 0) {
+      item.classList.add('main__task_type_even');
+      item.style.backgroundColor = randomColorEven;
+    }
+  });
+}
+
 const deleteTask = (e) => {
   const target = e.target.parentNode.parentNode;
   const arrayTasks = JSON.parse(localStorage.getItem('listTasks'));
   const completeTasks = JSON.parse(localStorage.getItem('completeTasks'));
-
   listTasks.removeChild(target);
   arrayTasks.forEach((item, index) => {
     if (item[1] === Number(target.dataset.id)) {
@@ -57,6 +106,7 @@ const deleteTask = (e) => {
   }
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
   localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
+  markTask();
 }
 
 const completeTask = (e) => {
@@ -80,6 +130,7 @@ const completeTask = (e) => {
   completeTasks.push(Number(target.dataset.id));
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
   localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
+  markTask();
 }
 
 const uncompleteTask = (e) => {
@@ -166,7 +217,8 @@ if (localStorage.getItem('listTasks')) {
     buttonEditTask.addEventListener('click', (e) => editTask(e, buttonCompleteTask, buttonEditTask, buttonSaveTask, extraButtons, textTask));
     buttonSaveTask.addEventListener('click', (e) => saveOrCancelTask(e, true, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
     buttonCancelTask.addEventListener('click', (e) => saveOrCancelTask(e, false, buttonCompleteTask, buttonEditTask, extraButtons, textTask));
-  })
+  });
+  markTask();
 }
 
 const addTask = (e) => {
@@ -183,16 +235,7 @@ const addTask = (e) => {
   listTasks.prepend(clone);
   localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
   disableAddButton();
-  if (isMarkOdd) {
-    if (count % 2 !== 0) {
-      task.classList.add('main__task_type_odd');
-    }
-  }
-  if (isMarkEven) {
-    if (count % 2 === 0) {
-      task.classList.add('main__task_type_even');
-    }
-  }
+  markTask();
   buttonDeleteTask.addEventListener('click', deleteTask);
   buttonCompleteTask.addEventListener('click', completeTask);
   buttonUncompleteTask.addEventListener('click', uncompleteTask);
@@ -202,30 +245,40 @@ const addTask = (e) => {
 }
 
 const markEvenTasks = () => {
+  localStorage.setItem('isMarkEven', isMarkEven);
   const tasks = document.querySelectorAll('.main__task');
   tasks.forEach((item, index) => {
     if (item.classList.contains('main__task_type_even')) {
       item.classList.remove('main__task_type_even');
+      item.style.backgroundColor = 'transparent';
       isMarkEven = false;
+      localStorage.setItem('isMarkEven', isMarkEven);
     } else {
-      if (index % 2 !== 0) {
+      if ((index + 1) % 2 === 0) {
         item.classList.add('main__task_type_even');
+        item.style.backgroundColor = randomColorEven;
         isMarkEven = true;
+        localStorage.setItem('isMarkEven', isMarkEven);
       }
     }
   });
 }
 
 const markOddTasks = () => {
+  localStorage.setItem('isMarkOdd', isMarkOdd);
   const tasks = document.querySelectorAll('.main__task');
   tasks.forEach((item, index) => {
     if (item.classList.contains('main__task_type_odd')) {
       item.classList.remove('main__task_type_odd');
+      item.style.backgroundColor = 'transparent';
       isMarkOdd = false;
+      localStorage.setItem('isMarkOdd', isMarkOdd);
     } else {
-      if (index % 2 === 0) {
+      if ((index + 1) % 2 !== 0) {
         item.classList.add('main__task_type_odd');
+        item.style.backgroundColor = randomColorOdd;
         isMarkOdd = true;
+        localStorage.setItem('isMarkOdd', isMarkOdd);
       }
     }
   });
@@ -244,11 +297,12 @@ const deleteTaskCommon = (isFirst) => {
           completeTasks.splice(index, 1);
         }
       })
-      localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
-  }
+    localStorage.setItem('completeTasks', JSON.stringify(completeTasks));
     }
-    isFirst ? listTasks.removeChild(tasks[0]) : listTasks.removeChild(tasks[tasks.length - 1]);
-    localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
+  }
+  isFirst ? listTasks.removeChild(tasks[0]) : listTasks.removeChild(tasks[tasks.length - 1]);
+  localStorage.setItem('listTasks', JSON.stringify(arrayTasks));
+  markTask();
 }
 
 const deleteFirstTask = () => {
