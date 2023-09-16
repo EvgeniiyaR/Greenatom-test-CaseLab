@@ -7,35 +7,36 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="./assets/images/favicon.png" type="image/x-icon">
   <title>ToDoList</title>
 </head>
 <body class="body">
   <h1 class="heading">ToDoList</h1>
   <div class="main">
     <ul class="main__btns">
-      <li class="main__btn"><button class="main__button main__button_type_even" type="button">Выделить четные элементы</button></li>
-      <li class="main__btn"><button class="main__button main__button_type_odd" type="button">Выделить нечетные элементы</button></li>
-      <li class="main__btn"><button class="main__button main__button_type_first" type="button">Удалить первый элемент</button></li>
-      <li class="main__btn"><button class="main__button main__button_type_last" type="button">Удалить последний элемент</button></li>
+      <li class="main__btn"><button class="main__button main__button_type_even" type="button">Выделить четные задачи</button></li>
+      <li class="main__btn"><button class="main__button main__button_type_odd" type="button">Выделить нечетные задачи</button></li>
+      <li class="main__btn"><button class="main__button main__button_type_first" type="button">Удалить первую задачу</button></li>
+      <li class="main__btn"><button class="main__button main__button_type_last" type="button">Удалить последнюю задачу</button></li>
     </ul>
     <div class="main__page">
       <form class="main__form" name="add-task">
         <input class="main__input" type="text" name="task" placeholder="Добавить задачу">
-        <button class="main__button main__button_type_add" type="submit">+</button>
+        <button class="main__button main__button_type_add" type="submit"></button>
       </form>
       <ul class="main__list-tasks">
         <template id="template-task">
           <li class="main__task">
             <input type="text" class="main__text"></input>
             <div class="main__btns-task">
-              <button class="main__button main__button_type_complete" type="button" title="Сделано">✔</button>
-              <button class="main__button main__button_type_uncomplete main__button_inactive" type="button" title="Не сделано">⃠</button>
-              <button class="main__button main__button_type_edit" type="button" title="Редактировать">✎</button>
+              <button class="main__button main__button_type_complete" type="button" title="Сделано"></button>
+              <button class="main__button main__button_type_uncomplete main__button_inactive" type="button" title="Не сделано"></button>
+              <button class="main__button main__button_type_edit" type="button" title="Редактировать"></button>
               <div class="main__extra-btns-edit main__extra-btns-edit_inactive">
-                <button class="main__button main__button_type_save" type="button" title="Сохранить">✔</button>
-                <button class="main__button main__button_type_cancel" type="button" title="Отмена">⃠</button>
+                <button class="main__button main__button_type_save" type="button" title="Обновить"></button>
+                <button class="main__button main__button_type_cancel" type="button" title="Отмена"></button>
               </div>
-              <button class="main__button main__button_type_delete" type="button" title="Удалить">X</button>
+              <button class="main__button main__button_type_delete" type="button" title="Удалить"></button>
             </div>
           </li>
         </template>

@@ -83,6 +83,7 @@
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 5px;
   padding: 0 5px 5px;
 }
@@ -99,6 +100,7 @@
 
 .main__input {
   border: none;
+  width: 180px;
 }
 
 .main__input:focus,
@@ -107,8 +109,7 @@
 }
 
 .main__button:disabled {
-  border-color: grey;
-  color: grey;
+  opacity: .3;
 }
 
 .main__button_type_add,
@@ -118,52 +119,45 @@
 .main__button_type_save,
 .main__button_type_cancel,
 .main__button_type_uncomplete {
-  width: 25px;
-  height: 25px;
+  width: 15px;
+  height: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  border-radius: 50%;
   transition: transform .3s linear;
+  background-position: center;
+  background-size: 15px 15px;
+  background-repeat: no-repeat;
+  border: none;
 }
 
 .main__button_type_add {
-  border: 1px solid green;
-  color: green;
-  font-size: 16px;
+  background-image: url(./assets/icons/add.svg);
 }
 
 .main__button_type_complete {
-  border: 1px solid green;
-  color: green;
-  font-size: 13px;
+  background-image: url(./assets/icons/check.svg);
 }
 
 .main__button_type_edit {
-  border: 1px solid purple;
-  color: purple;
-  font-size: 13px;
+  background-image: url(./assets/icons/pencil.svg);
 }
 
 .main__button_type_delete {
-  border: 1px solid red;
-  color: red;
-  font-size: 13px;
+  background-image: url(./assets/icons/cross.svg);
+  background-size: 12px 12px;
+  width: 12px;
+  height: 12px;
 }
 
 .main__button_type_save {
-  border: 1px solid blue;
-  color: blue;
-  font-size: 13px;
+  background-image: url(./assets/icons/refresh.svg);
 }
 
 .main__button_type_cancel,
 .main__button_type_uncomplete {
-  border: 1px solid orange;
-  color: orange;
-  font-size: 13px;
-  align-items: flex-start;
+  background-image: url(./assets/icons/cross-circle.svg);
 }
 
 .main__task {
@@ -182,21 +176,15 @@
 
 .main__btns-task {
   display: flex;
+  align-items: center;
   gap: 5px;
-}
-
-.main__task_type_even {
-  background-color: aquamarine;
-}
-
-.main__task_type_odd {
-  background-color: greenyellow;
 }
 
 .main__text {
   background-color: transparent;
   border: none;
   color: black;
+  width: 180px;
 }
 
 .main__text_type_complete {
@@ -295,7 +283,7 @@
   flex-direction: column;
   overflow: auto;
   width: 275px;
-  height: 305px;
+  height: 267px;
 }
 
 .main__list-tasks::-webkit-scrollbar {
