@@ -23,16 +23,6 @@ TodoList
 * CSS;
 * JavaScript;
 
-Инструкция по развертыванию:
-1. Склонируйте репозиторий локально:
-
-`git clone https://github.com/EvgeniiyaR/Greenatom-test-CaseLab.git`
-
-
-2. Установите Node.js с официального сайта https://nodejs.org/
-3. Установите модули npm: `npm install`
-4. Запустите проект: `npm run start`
-
 ---
 
 Ссылка на деплой проекта: https://evgeniiyar.github.io/Greenatom-test-CaseLab/
